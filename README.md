@@ -1,0 +1,91 @@
+LiipSoapRecorderBundle
+======================
+
+This bundle provides an easy way to record SOAP communications. Typical usage could be:
+
+ * Generating a set of fixtures for functional test writing
+ * Recording a scenario and being able to replay it
+ * Mocking the webservice to work offline
+ * ...
+
+Installation
+------------
+
+ 1. Install this bundle like any other SF2 bundle (Composer or git submodule install + Enable it in the kernel)
+ 1. Replace the base class SoapClient by the new Liip\SoapRecorderBundle\Client\RecordableSoapClient
+
+
+Configuration
+-------------
+
+By default the bundle does nothing, to activate it, you just need to configure it:
+
+```
+liip_soap_recorder:
+    record:          true                 # boolean, activate or not the recording
+    fetching_mode:   local_first          # can be remote, local_first or local_only
+    request_folder:  /tmp/soap_request    # where to store the XML request
+    response_folder: /tmp/soap_response   # where to store the XML response
+    wsdl_folder:     /tml/soap_wsdl       # where to store the WSDL of the webservice
+```
+
+Usage
+-----
+
+To use the bundle, you can play with two config parameters:
+
+ * **record** can be set to
+   * *true*: to start communication recording
+   * *false*: to stop it
+ * **fetching_mode** can be set to:
+   * *remote*: Always fetch response from the WebService
+   * *local_only*: Always fetch response from the local recording
+   * *local_first*: Try to fetch locally, and if not recorded yet, fetch to the WebService
+
+
+Usage outside Symfony2
+----------------------
+
+The heart of the bundle is the class Liip\SoapRecorderBundle\Client\RecordableSoapClient. This class is
+ independent, so you can use it outside of the Bundle, in any PHP 5.2 project:
+
+ 1. Replace your base class SoapClient by the new Liip\SoapRecorderBundle\Client\RecordableSoapClient
+ 1. Start recording by calling:
+
+```
+   RecordableSoapClient::setRecordFolders('/tmp/request', '/tmp/response', '/tmp/wsdl');
+   RecordableSoapClient::startRecording();
+   // Call your webservice like usual`
+```
+
+1. Start playing your records
+
+```
+   RecordableSoapClient::setFetchingMode(RecordableSoapClient::FETCHING_LOCAL_FIRST);
+   // Call your webservice like usual
+```
+
+
+
+Contributing
+------------
+If you would like to contribute, just go on the project page: https://github.com/liip/LiipSoapRecorderBundle
+
+
+Requirements
+------------
+
+PHP 5.2
+
+
+Authors
+-------
+
+- Pierre Vanhulst - Liip SA <pierre.vanhulst@liip.ch>
+- David Jeanmonod - Liip SA <david.jeanmonod@liip.ch>
+
+
+License
+-------
+
+LiipSoapRecorderBundle is licensed under the MIT License - see the LICENSE file for details

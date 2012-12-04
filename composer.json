@@ -1,0 +1,29 @@
+{
+    "name": "liip/soap-recorder-bundle",
+    "version": "0.9.0",
+    "description": "A simple recorder for SOAP communication",
+    "keywords": ["webservice", "soap", "recorder", "testing", "symfony2"],
+    "type": "symfony-bundle",
+    "homepage": "http://github.com/liip/LiipSoapRecorderBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Jeanmonod",
+            "email": "david.jeanmonod@liip.ch",
+            "role": "Developer"
+        }
+
+    ],
+    "require": {
+        "php": ">=5.2.0"
+    },
+    "require-dev": {
+        "liip-rmt": ">=1.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Liip\\SoapRecorderBundle": ""
+        }
+    },
+    "target-dir" : "Liip/FunctionalTestBundle"
+}
