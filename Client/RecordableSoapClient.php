@@ -2,6 +2,11 @@
 
 namespace Liip\SoapRecorderBundle\Client;
 
+
+/**
+ * This class allow to record SOAP communication. Just extends it instead of the classic
+ *  SoapClient, and then configure it with the public static methods available
+ */
 class RecordableSoapClient extends \SoapClient
 {
     const FETCHING_LOCAL_ONLY  = 'local_only';
@@ -13,12 +18,18 @@ class RecordableSoapClient extends \SoapClient
     protected static $requestFolder = null;
     protected static $responseFolder = null;
     protected static $wsdlFolder = null;
-    protected $uniqueRequestId = null;
 
     /**
-     * Override the default constructor to save WSDL if we are in recoding mode and to use it in local_only mode
-     * @param string $wsdlUrl
-     * @param array $options
+     * @var string This will be the unique identifier that will be used to identify a request
+     */
+    protected $uniqueRequestId = null;
+
+
+    /**
+     * Override of the default constructor, this allow to save the WSDL and re-use it in local_only mode
+     *
+     * @param string  $wsdlUrl
+     * @param array   $options
      */
     public function __construct($wsdlUrl, $options)
     {
@@ -38,6 +49,12 @@ class RecordableSoapClient extends \SoapClient
         parent::__construct($wsdlUrl, $options);
     }
 
+
+    /**
+     * Record the provided WSDl if not yet exist
+     * @param $wsdlUrl
+     * @param $options
+     */
     protected function recordWsdlIfRequire($wsdlUrl, $options)
     {
         if ($wsdlUrl!== null) {
@@ -50,7 +67,7 @@ class RecordableSoapClient extends \SoapClient
 
 
     /**
-     * Start the recording mode, RecordableSoapClient::setRecordFolders() must be called before
+     * Start the recording, RecordableSoapClient::setRecordFolders() must be called before
      */
     public static function startRecording()
     {
@@ -69,8 +86,9 @@ class RecordableSoapClient extends \SoapClient
         self::$recordCommunications = true;
     }
 
+
     /**
-     * Stop the recording mode
+     * Stop the recording
      */
     public static function stopRecording()
     {
@@ -79,6 +97,7 @@ class RecordableSoapClient extends \SoapClient
 
     /**
      * Configure the three folders where communications will be recorded
+     *
      * @param string $requestFolder
      * @param string $responseFolder
      * @param string $wsdlFolder
@@ -98,22 +117,41 @@ class RecordableSoapClient extends \SoapClient
         self::$wsdlFolder = realpath($wsdlFolder);
     }
 
+
     /**
      * Select the mode that will be used for webservice response fetching
      * If mode FETCHING_LOCAL_* RecordableSoapClient::setRecordFolders() must also be called
+     *
      * @param $fetchingMode
      * @throws \InvalidArgumentException
      */
     public static function setFetchingMode($fetchingMode)
     {
+        // Check mode validity
         if (!in_array($fetchingMode, array(self::FETCHING_LOCAL_FIRST, self::FETCHING_LOCAL_ONLY, self::FETCHING_REMOTE))) {
             throw new \InvalidArgumentException("You must set the fetching mode with one of the provided constants");
         }
+
+        // Check folders are set
+        if ($fetchingMode !== self::FETCHING_REMOTE) {
+            foreach (array(self::$requestFolder, self::$responseFolder, self::$wsdlFolder) as $folder) {
+                if ($folder===null) {
+                    throw new \InvalidArgumentException("You must call RecordableSoapClient::setRecordFolders() before fetching local");
+                }
+            }
+        }
+
         self::$fetchingMode = $fetchingMode;
     }
 
+
     /**
-     * This method is overrided to generate a unique request ID based on the function name and arguments
+     * This method is overridden to generate a unique request ID based on the function name and arguments
+     * The id is generated here, as it's more easy to work on those high level parameters than on the XML
+     * of the __doRequest method
+     *
+     * @param string $function_name
+     * @param array $arguments
      */
     public function __call($function_name, $arguments)
     {
@@ -121,8 +159,11 @@ class RecordableSoapClient extends \SoapClient
         return parent::__call($function_name, $arguments);
     }
 
+
     /**
      * This method is overrided to generate a unique request ID based on the function name and arguments
+     *
+     * @see self::__call()
      */
     public function __soapCall ($function_name, $arguments, $options=null, $input_headers=null, &$output_headers=null)
     {
@@ -130,10 +171,9 @@ class RecordableSoapClient extends \SoapClient
         return parent::__soapCall($function_name, $arguments, $options, $input_headers, $output_headers);
     }
 
+
     /**
-     * Generation of a unique request id, this have to be done with high level parameters (function name and arguments).
-     *  Trying to do it with the SOAP request in the __doRequest method will fail as the XML SOAP request is different
-     *  in WSDL mode and non-WSDL mode
+     * Generation of a unique request id, based on high level parameters (function name and arguments).
      *
      * @param $functionName
      * @param $arguments
@@ -145,9 +185,12 @@ class RecordableSoapClient extends \SoapClient
         }
     }
 
+
     /**
      * Override the do request in order to record communications and/or to fetch response from the local
      *  filesystem
+     *
+     * @throws \RuntimeException   only in LOCAL_ONLY mode
      */
     public function __doRequest ($request, $location, $action, $version, $one_way = 0)
     {
@@ -173,23 +216,43 @@ class RecordableSoapClient extends \SoapClient
         return $response;
     }
 
+
+    /**
+     * Generate a request file path based on the unique id
+     *
+     * @return string
+     */
     protected function getRequestFilePath()
     {
         return $this->generateFilePath('request');
     }
 
+
+    /**
+     * Generate a response file path based on the unique id
+     *
+     * @return string
+     */
     protected function getResponseFilePath()
     {
         return $this->generateFilePath('response');
     }
 
+
+    /**
+     * Generate a path where to store a given WSDL
+     *
+     * @return string
+     */
     protected function getWsdlFilePath($wsdlUrl)
     {
         return self::$wsdlFolder.DIRECTORY_SEPARATOR.basename($wsdlUrl);
     }
 
+
     /**
-     * Return a record file path according to the uniqueRequestId
+     * Return a record (request or response) file path according to the uniqueRequestId
+     *
      * @param $type
      * @return string
      * @throws \RuntimeException
@@ -206,4 +269,5 @@ class RecordableSoapClient extends \SoapClient
 
         return $folder.DIRECTORY_SEPARATOR.$this->uniqueRequestId.'.xml';
     }
+
 }

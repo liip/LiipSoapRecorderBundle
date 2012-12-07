@@ -7,6 +7,9 @@ use Liip\SoapRecorderBundle\Client\RecordableSoapClient;
 
 class LiipSoapRecorderBundle extends Bundle
 {
+    /**
+     * Configure the recorder according to the container config
+     */
     public function boot()
     {
         if ($this->container->hasParameter('liip_soap_recorder_config')) {
@@ -16,7 +19,11 @@ class LiipSoapRecorderBundle extends Bundle
             }
             if ($config['fetching_mode'] !== 'remote' || $config['record'] === true) {
                 RecordableSoapClient::setFetchingMode($config['fetching_mode']);
-                RecordableSoapClient::setRecordFolders($config['request_folder'], $config['response_folder'], $config['wsdl_folder']);
+                RecordableSoapClient::setRecordFolders(
+                    $config['request_folder'],
+                    $config['response_folder'],
+                    $config['wsdl_folder']
+                );
             }
         }
     }

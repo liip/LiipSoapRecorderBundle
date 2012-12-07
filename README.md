@@ -66,10 +66,20 @@ The heart of the bundle is the class Liip\SoapRecorderBundle\Client\RecordableSo
 ```
 
 
-
 Contributing
 ------------
 If you would like to contribute, just go on the project page: https://github.com/liip/LiipSoapRecorderBundle
+
+
+Testing
+-------
+
+This project is shipped with a functional test suite, to run it, your net to have PHPUnit install that then to run
+ the command:
+
+```
+   phpunit --stderr
+```
 
 
 Requirements

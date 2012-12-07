@@ -1,10 +1,10 @@
 LiipSoapRecorderBundle Test
 ===========================
 
-Testing this tool is not easy. The goal of those tests was to allow testing without having to use the HTTP Layer.
+Testing this tool was not easy. The goal of those tests was to allow testing without having to use the HTTP Layer.
 
-This have been done with a specific class StandAloneSoapClient, this class extand SoapClient, but instead of sending
- requests on the wire, it resolve them locally using a TestServer class. This two classes are tested into the
+This have been done with a specific class StandAloneSoapClient, this class extend SoapClient, but instead of sending
+ requests on the wire, it resolve them locally using the TestServer class. This two classes are tested into the
  CalibrationTest.
 
 Then, in order to use that class in tests, it require that we modify the RecordableSoapClient to extends this new class
@@ -16,6 +16,8 @@ Then, in order to use that class in tests, it require that we modify the Recorda
 And after the setup:
 
    YourSoapClient > RecordableSoapClient > StandAloneSoapClient > SoapClient >>> resolve call locally with TestServer
+
+Everything is put back in the place in the tearDown method.
 
 
 Contributing

@@ -5,6 +5,9 @@ namespace Liip\SoapRecorderBundle\DependencyInjection;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * Load the bundle configuration to a specific container parameter
+ */
 class LiipSoapRecorderExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
