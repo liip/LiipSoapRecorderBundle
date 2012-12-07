@@ -18,12 +18,13 @@
         "php": ">=5.2.0"
     },
     "require-dev": {
-        "liip-rmt": ">=1.0"
+        "liip-rmt": ">=0.9"
     },
     "autoload": {
         "psr-0": {
             "Liip\\SoapRecorderBundle": ""
         }
     },
-    "target-dir" : "Liip/FunctionalTestBundle"
+    "target-dir" : "Liip/FunctionalTestBundle",
+    "minimum-stability": "beta"
 }
