@@ -57,8 +57,13 @@ class RecordableSoapClient extends \SoapClient
         if (self::$fetchingMode === self::FETCHING_LOCAL_ONLY) {
             throw new \Exception("It's not possible to record with FETCHING_LOCAL_ONLY mode");
         }
-        if (self::$requestFolder === null || self::$responseFolder === null || self::$wsdlFolder === null){
-            throw new \Exception("You must call RecordableSoapClient::setRecordFolders() before recoding");
+        foreach (array(self::$requestFolder, self::$responseFolder, self::$wsdlFolder) as $folder){
+            if ($folder===null){
+                throw new \InvalidArgumentException("You must call RecordableSoapClient::setRecordFolders() before recording");
+            }
+            if (!is_writable($folder)) {
+                throw new \InvalidArgumentException("The folder [$folder] have not write permissions");
+            }
         }
 
         self::$recordCommunications = true;
@@ -73,20 +78,21 @@ class RecordableSoapClient extends \SoapClient
     }
 
     /**
-     * Configure the two folders where to store the recorded communications
-     * @param $requestFolder
-     * @param $responseFolder
+     * Configure the three folders where communications will be recorded
+     * @param string $requestFolder
+     * @param string $responseFolder
+     * @param string $wsdlFolder
      */
     public static function setRecordFolders($requestFolder, $responseFolder, $wsdlFolder)
     {
+        // Validity check
         foreach (array($requestFolder, $responseFolder, $wsdlFolder) as $folder){
             if (!file_exists($folder)) {
                 throw new \InvalidArgumentException("The provided folder [$folder] doesn't exist");
             }
-            if (!is_writable($folder)) {
-                throw new \InvalidArgumentException("The provided folder [$folder] have not write permissions");
-            }
         }
+
+        // Normalize the folders name
         self::$requestFolder = realpath($requestFolder);
         self::$responseFolder = realpath($responseFolder);
         self::$wsdlFolder = realpath($wsdlFolder);
