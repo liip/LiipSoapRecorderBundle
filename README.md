@@ -1,7 +1,7 @@
 LiipSoapRecorderBundle [![Build Status](https://secure.travis-ci.org/liip/LiipSoapRecorderBundle.png?branch=master)](https://travis-ci.org/liip/LiipSoapRecorderBundle)
 ======================
 
-This bundle provides an easy way to record SOAP communications. Typical usage could be:
+This bundle provide an easy way to record SOAP communications. Typical usage could be:
 
  * Generating a set of fixtures for functional test writing
  * Recording a scenario and being able to replay it
