@@ -1,4 +1,4 @@
-LiipSoapRecorderBundle
+LiipSoapRecorderBundle [![Build Status](https://secure.travis-ci.org/liip/LiipSoapRecorderBundle.png?branch=master)](https://travis-ci.org/liip/LiipSoapRecorderBundle)
 ======================
 
 This bundle provides an easy way to record SOAP communications. Typical usage could be:
@@ -69,8 +69,11 @@ The heart of the bundle is the class Liip\SoapRecorderBundle\Client\RecordableSo
 Contributing
 ------------
 If you would like to contribute, just go on the project page: https://github.com/liip/LiipSoapRecorderBundle, fork it
-and providing PRs. This project comes with a functional test suite, just read the Tests/README.md for more information.
+and providing PRs.
 
+This project comes with a functional test suite, just read the Tests/README.md for more information.
+
+Travis CI is also running for continuous integration tests: [![Build Status](https://secure.travis-ci.org/liip/LiipSoapRecorderBundle.png?branch=master)](https://travis-ci.org/liip/LiipSoapRecorderBundle)
 
 Requirements
 ------------

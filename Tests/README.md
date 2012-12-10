@@ -37,6 +37,11 @@ To workaround this, just redirect the PHPUnit output to the STDERR.
    phpunit --stderr
 ```
 
+Continuous integration
+----------------------
+
+Travis CI is there: [![Build Status](https://secure.travis-ci.org/liip/LiipSoapRecorderBundle.png?branch=master)](https://travis-ci.org/liip/LiipSoapRecorderBundle)
+
 
 Contributing
 ------------
