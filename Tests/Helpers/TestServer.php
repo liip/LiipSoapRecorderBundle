@@ -1,6 +1,6 @@
 <?php
 
-namespace Liip\SoapRecorderBundle\Tests;
+namespace Liip\SoapRecorderBundle\Tests\Helpers;
 
 class TestServer
 {

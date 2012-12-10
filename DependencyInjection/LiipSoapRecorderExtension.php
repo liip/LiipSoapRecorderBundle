@@ -7,6 +7,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Load the bundle configuration to a specific container parameter
+ *
+ * @author David Jeanmonod <david.jeanmonod@liip.ch>
  */
 class LiipSoapRecorderExtension extends Extension
 {

@@ -5,6 +5,12 @@ namespace Liip\SoapRecorderBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Liip\SoapRecorderBundle\Client\RecordableSoapClient;
 
+
+/**
+ * Configure the RecordableSoapClient according to the container parameter [liip_soap_recorder_config]
+ *
+ * @author David Jeanmonod <david.jeanmonod@liip.ch>
+ */
 class LiipSoapRecorderBundle extends Bundle
 {
     /**

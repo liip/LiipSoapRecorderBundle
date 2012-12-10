@@ -2,10 +2,11 @@
 
 namespace Liip\SoapRecorderBundle\Client;
 
-
 /**
  * This class allow to record SOAP communication. Just extends it instead of the classic
  *  SoapClient, and then configure it with the public static methods available
+ *
+ * @author David Jeanmonod <david.jeanmonod@liip.ch>
  */
 class RecordableSoapClient extends \SoapClient
 {
@@ -264,7 +265,7 @@ class RecordableSoapClient extends \SoapClient
              throw new \RuntimeException("You must call RecordableSoapClient::setRecordFolders() before using the recorder");
         }
         if ($this->uniqueRequestId === null){
-            throw new \RuntimeException("You must call RecordableSoapClient::setRecordFolders() before using the recorder");
+            throw new \RuntimeException("Unexpected error when generating the unique request ID, please contact the LiipSoapRecorderBundle maintainers");
         }
 
         return $folder.DIRECTORY_SEPARATOR.$this->uniqueRequestId.'.xml';

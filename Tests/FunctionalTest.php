@@ -3,23 +3,40 @@
 namespace Liip\SoapRecorderBundle\Tests;
 
 use Liip\SoapRecorderBundle\Client\RecordableSoapClient;
+use Liip\SoapRecorderBundle\Tests\Helpers\TestServer;
+use Liip\SoapRecorderBundle\Tests\Helpers\TestClient;
 
-
+/**
+ * Set of functional tests on the RecordableSoapClient class
+ *
+ * @author David Jeanmonod <david.jeanmonond@liip.ch>
+ *
+ * @todo   Test on wsdl mode
+ */
 class FunctionalTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * To understand this three static methods, please read the test README
-     */
     const NORMAL_DECLARATION = 'class RecordableSoapClient extends \SoapClient';
-    const TEST_DECLARATION = 'class RecordableSoapClient extends \Liip\SoapRecorderBundle\Tests\StandAloneSoapClient';
+    const TEST_DECLARATION = 'class RecordableSoapClient extends \Liip\SoapRecorderBundle\Tests\Helpers\LocalSoapClient';
+
+    /**
+     * Change the RecordableSoapClient base class, please read the test README
+     */
     public static function setUpBeforeClass()
     {
         self::updateRecordableSoapClientDeclaration(self::NORMAL_DECLARATION, self::TEST_DECLARATION);
     }
+
+    /**
+     * Reset the RecordableSoapClient base class
+     */
     public static function tearDownAfterClass()
     {
         self::updateRecordableSoapClientDeclaration(self::TEST_DECLARATION, self::NORMAL_DECLARATION);
     }
+
+    /**
+     * Update the RecordableSoapClient class declaration
+     */
     public static function updateRecordableSoapClientDeclaration($from, $to)
     {
         $file = __DIR__.'/../Client/RecordableSoapClient.php';
@@ -34,7 +51,7 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
     {
         $client = new TestClient();
         $this->assertEquals('Liip\SoapRecorderBundle\Client\RecordableSoapClient', $parent = get_parent_class($client));
-        $this->assertEquals('Liip\SoapRecorderBundle\Tests\StandAloneSoapClient', $parent = get_parent_class($parent));
+        $this->assertEquals('Liip\SoapRecorderBundle\Tests\Helpers\LocalSoapClient', $parent = get_parent_class($parent));
         $this->assertEquals('SoapClient', get_parent_class($parent));
     }
 
@@ -83,6 +100,7 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
         $this->createAndConfigureTestFolders();
         RecordableSoapClient::startRecording();
         TestServer::$fruit = 'apple';
+        TestServer::$number = 123;
 
         // Calling the webservice
         $client = new TestClient();
@@ -92,7 +110,7 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
         RecordableSoapClient::setFetchingMode(RecordableSoapClient::FETCHING_LOCAL_FIRST);
         TestServer::$fruit = 'banana';
         $this->assertEquals('apple', $client->getTheFruit(), "Fetching the value from the records");
-        $this->assertEquals(17, $client->getTheNumber(), "Ensure that the remote fallback is still working");
+        $this->assertEquals(123, $client->getTheNumber(), "Ensure that the remote fallback is still working");
 
         // Switch to remote and try to get the banana
         RecordableSoapClient::setFetchingMode(RecordableSoapClient::FETCHING_REMOTE);

@@ -1,8 +1,13 @@
 <?php
 
-namespace Liip\SoapRecorderBundle\Tests;
+namespace Liip\SoapRecorderBundle\Tests\Helpers;
 
-class StandAloneSoapClient extends \SoapClient
+/**
+ * Specific SOAP client that resolve SOAP request locally (see tests README for info)
+ *
+ * @author David Jeanmonod <david.jeanmonond@liip.ch>
+ */
+class LocalSoapClient extends \SoapClient
 {
     protected $server;
 
@@ -13,7 +18,7 @@ class StandAloneSoapClient extends \SoapClient
 
         // Create a local serveur that will process the calls
         $this->server = new \SoapServer($wsdl, $options);
-        $this->server->setClass('Liip\SoapRecorderBundle\Tests\TestServer');
+        $this->server->setClass('Liip\SoapRecorderBundle\Tests\Helpers\TestServer');
     }
 
     public function __doRequest ($request, $location, $action, $version, $one_way = 0)
