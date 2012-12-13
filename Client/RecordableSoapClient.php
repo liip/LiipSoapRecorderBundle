@@ -36,7 +36,7 @@ class RecordableSoapClient extends \SoapClient
     {
         // WSDL recording
         if (self::$recordCommunications == true) {
-            $this->recordWsdlIfRequire($wsdlUrl, $options);
+            $this->recordWsdlIfRequired($wsdlUrl, $options);
         }
 
         // On local only mode, we have to use the recorded wsdl
@@ -56,7 +56,7 @@ class RecordableSoapClient extends \SoapClient
      * @param $wsdlUrl
      * @param $options
      */
-    protected function recordWsdlIfRequire($wsdlUrl, $options)
+    protected function recordWsdlIfRequired($wsdlUrl, $options)
     {
         if ($wsdlUrl!== null) {
             $wsdlFile = $this->getWsdlFilePath($wsdlUrl);
@@ -156,7 +156,7 @@ class RecordableSoapClient extends \SoapClient
      */
     public function __call($function_name, $arguments)
     {
-        $this->populateTheUniqueRequestIdIfRequire($function_name, $arguments);
+        $this->populateTheUniqueRequestIdIfRequired($function_name, $arguments);
         return parent::__call($function_name, $arguments);
     }
 
@@ -168,7 +168,7 @@ class RecordableSoapClient extends \SoapClient
      */
     public function __soapCall ($function_name, $arguments, $options=null, $input_headers=null, &$output_headers=null)
     {
-        $this->populateTheUniqueRequestIdIfRequire($function_name, $arguments);
+        $this->populateTheUniqueRequestIdIfRequired($function_name, $arguments);
         return parent::__soapCall($function_name, $arguments, $options, $input_headers, $output_headers);
     }
 
@@ -179,7 +179,7 @@ class RecordableSoapClient extends \SoapClient
      * @param $functionName
      * @param $arguments
      */
-    protected function populateTheUniqueRequestIdIfRequire($functionName, $arguments)
+    protected function populateTheUniqueRequestIdIfRequired($functionName, $arguments)
     {
         if (self::$fetchingMode !== self::FETCHING_REMOTE || self::$recordCommunications){
             $this->uniqueRequestId = md5($functionName.serialize($arguments));
@@ -270,5 +270,4 @@ class RecordableSoapClient extends \SoapClient
 
         return $folder.DIRECTORY_SEPARATOR.$this->uniqueRequestId.'.xml';
     }
-
 }
