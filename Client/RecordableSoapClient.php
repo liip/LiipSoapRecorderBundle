@@ -24,6 +24,7 @@ class RecordableSoapClient extends \SoapClient
      * @var string This will be the unique identifier that will be used to identify a request
      */
     protected $uniqueRequestId = null;
+    protected $wsdlUrl = null;
 
 
     /**
@@ -34,6 +35,8 @@ class RecordableSoapClient extends \SoapClient
      */
     public function __construct($wsdlUrl, $options)
     {
+        $this->wsdlUrl = $wsdlUrl;
+
         // WSDL recording
         if (self::$recordCommunications == true) {
             $this->recordWsdlIfRequired($wsdlUrl, $options);
@@ -61,7 +64,7 @@ class RecordableSoapClient extends \SoapClient
         if ($wsdlUrl!== null) {
             $wsdlFile = $this->getWsdlFilePath($wsdlUrl);
             if (!file_exists($wsdlFile)) {
-                file_put_contents($wsdlFile, file_get_contents($wsdlUrl));
+                file_put_contents($wsdlFile, self::formatXml(file_get_contents($wsdlUrl)));
             }
         }
     }
@@ -113,9 +116,19 @@ class RecordableSoapClient extends \SoapClient
         }
 
         // Normalize the folders name
-        self::$requestFolder = realpath($requestFolder);
-        self::$responseFolder = realpath($responseFolder);
-        self::$wsdlFolder = realpath($wsdlFolder);
+        static::$requestFolder = realpath($requestFolder);
+        static::$responseFolder = realpath($responseFolder);
+        static::$wsdlFolder = realpath($wsdlFolder);
+    }
+
+    /**
+     * Only set the folders if they are not set yet
+     */
+    public static function setRecordFoldersIfEmpty($requestFolder, $responseFolder, $wsdlFolder)
+    {
+        if (static::$requestFolder === null){
+            static::setRecordFolders($requestFolder, $responseFolder, $wsdlFolder);
+        }
     }
 
 
@@ -174,16 +187,30 @@ class RecordableSoapClient extends \SoapClient
 
 
     /**
-     * Generation of a unique request id, based on high level parameters (function name and arguments).
-     *
+     * Fill up the request id, if we need it, by generating it with the method generateUniqueRequestId
      * @param $functionName
      * @param $arguments
      */
     protected function populateTheUniqueRequestIdIfRequired($functionName, $arguments)
     {
         if (self::$fetchingMode !== self::FETCHING_REMOTE || self::$recordCommunications){
-            $this->uniqueRequestId = md5($functionName.serialize($arguments));
+            $this->uniqueRequestId = $this->generateUniqueRequestId($this->wsdlUrl, $functionName, $arguments);
         }
+    }
+
+    /**
+     * Generation of a unique request id, based on high level parameters (function name and arguments).
+     * This function can be overridden to use a different file naming, or to ignore some dynamic parameters
+     *  like date
+     *
+     * @param $wsdlUrl       string
+     * @param $functionName  string
+     * @param $arguments     array
+     * @return string
+     */
+    public function generateUniqueRequestId($wsdlUrl, $functionName, $arguments)
+    {
+        return md5($functionName.serialize($arguments));
     }
 
 
@@ -210,8 +237,8 @@ class RecordableSoapClient extends \SoapClient
 
         // Potentially record the call
         if (self::$recordCommunications) {
-            file_put_contents($this->getRequestFilePath(), $request);
-            file_put_contents($this->getResponseFilePath(), $response);
+            file_put_contents($this->getRequestFilePath(), self::formatXml($request));
+            file_put_contents($this->getResponseFilePath(), self::formatXml($response, 'response'));
         }
 
         return $response;
@@ -262,12 +289,39 @@ class RecordableSoapClient extends \SoapClient
     {
         $folder = $type==='request' ? self::$requestFolder : self::$responseFolder;
         if ($folder === null) {
-             throw new \RuntimeException("You must call RecordableSoapClient::setRecordFolders() before using the recorder");
+            throw new \RuntimeException("You must call RecordableSoapClient::setRecordFolders() before using the recorder");
         }
         if ($this->uniqueRequestId === null){
             throw new \RuntimeException("Unexpected error when generating the unique request ID, please contact the LiipSoapRecorderBundle maintainers");
         }
 
         return $folder.DIRECTORY_SEPARATOR.$this->uniqueRequestId.'.xml';
+    }
+
+
+    /**
+     * Format XML input in a more readable fashion
+     *
+     * @param $xmlData       string
+     * @param $xmlInputType  string
+     * @return string
+     */
+    public function formatXml($xmlData, $xmlInputType = 'request')
+    {
+        $doc = new \DOMDocument;
+        $doc->loadXML($xmlData);
+        $doc->formatOutput = TRUE;
+        
+        // Responses from SWSE do not feature XML header for some reasons. 
+        // We're just making sure to do the same.
+        if($xmlInputType == 'response')
+        {
+            foreach($doc->childNodes as $node)
+            {
+                $xmlOutput = $doc->saveXML($node);
+            }
+        }
+        else $xmlOutput = $doc->saveXML();
+        return $xmlOutput;
     }
 }
