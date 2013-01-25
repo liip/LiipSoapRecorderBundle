@@ -116,19 +116,9 @@ class RecordableSoapClient extends \SoapClient
         }
 
         // Normalize the folders name
-        static::$requestFolder = realpath($requestFolder);
-        static::$responseFolder = realpath($responseFolder);
-        static::$wsdlFolder = realpath($wsdlFolder);
-    }
-
-    /**
-     * Only set the folders if they are not set yet
-     */
-    public static function setRecordFoldersIfEmpty($requestFolder, $responseFolder, $wsdlFolder)
-    {
-        if (static::$requestFolder === null){
-            static::setRecordFolders($requestFolder, $responseFolder, $wsdlFolder);
-        }
+        self::$requestFolder = realpath($requestFolder);
+        self::$responseFolder = realpath($responseFolder);
+        self::$wsdlFolder = realpath($wsdlFolder);
     }
 
 
