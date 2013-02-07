@@ -61,7 +61,7 @@ class RecordableSoapClient extends \SoapClient
         if ($wsdlUrl!== null) {
             $wsdlFile = $this->getWsdlFilePath($wsdlUrl);
             if (!file_exists($wsdlFile)) {
-                file_put_contents($wsdlFile, file_get_contents($wsdlUrl));
+                file_put_contents($wsdlFile, self::formatXml(file_get_contents($wsdlUrl)));
             }
         }
     }
@@ -174,7 +174,7 @@ class RecordableSoapClient extends \SoapClient
 
 
     /**
-     * Generation of a unique request id, based on high level parameters (function name and arguments).
+     * Fill up the request id, if we need it, by generating it with the method generateUniqueRequestId
      *
      * @param $functionName
      * @param $arguments
@@ -210,8 +210,8 @@ class RecordableSoapClient extends \SoapClient
 
         // Potentially record the call
         if (self::$recordCommunications) {
-            file_put_contents($this->getRequestFilePath(), $request);
-            file_put_contents($this->getResponseFilePath(), $response);
+            file_put_contents($this->getRequestFilePath(), self::formatXml($request));
+            file_put_contents($this->getResponseFilePath(), self::formatXml($response, false));
         }
 
         return $response;
@@ -262,12 +262,43 @@ class RecordableSoapClient extends \SoapClient
     {
         $folder = $type==='request' ? self::$requestFolder : self::$responseFolder;
         if ($folder === null) {
-             throw new \RuntimeException("You must call RecordableSoapClient::setRecordFolders() before using the recorder");
+            throw new \RuntimeException("You must call RecordableSoapClient::setRecordFolders() before using the recorder");
         }
         if ($this->uniqueRequestId === null){
             throw new \RuntimeException("Unexpected error when generating the unique request ID, please contact the LiipSoapRecorderBundle maintainers");
         }
 
         return $folder.DIRECTORY_SEPARATOR.$this->uniqueRequestId.'.xml';
+    }
+
+
+    /**
+     * Format XML input in a more readable fashion
+     *
+     * @param $xmlData           string
+     * @param $includeXmlHeader  boolean
+     * @return string
+     */
+    public function formatXml($xmlData, $includeXmlHeader = true)
+    {
+    	if(isset($xmlData)) {
+        	$doc = new \DOMDocument;
+            $doc->loadXML($xmlData, LIBXML_NOERROR);
+            $doc->formatOutput = TRUE;
+        
+            if(!$includeXmlHeader) {
+                foreach($doc->childNodes as $node) {
+                    $xmlOutput = $doc->saveXML($node);
+                }
+            }
+            else {
+                $xmlOutput = $doc->saveXML();
+            }
+
+            return $xmlOutput;
+    	}
+    	else {
+    	    return $xmlData;
+    	}
     }
 }
