@@ -20,7 +20,7 @@
         "php": ">=5.2.0"
     },
     "require-dev": {
-        "liip-rmt": ">=0.9"
+        "liip/rmt": "0.9.*"
     },
     "autoload": {
         "psr-0": {
@@ -28,5 +28,5 @@
         }
     },
     "target-dir" : "Liip/LiipSoapRecorderBundle",
-    "minimum-stability": "beta"
+    "minimum-stability": "dev"
 }
