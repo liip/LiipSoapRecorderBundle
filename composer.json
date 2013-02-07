@@ -8,11 +8,13 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "David Jeanmonod",
-            "email": "david.jeanmonod@liip.ch",
-            "role": "Developer"
+            "name": "Liip SA",
+            "homepage": "http://www.liip.ch/"
+        },
+        {
+            "name": "Community contributions",
+            "homepage": "https://github.com/liip/LiipSoapRecorderBundle/contributors"
         }
-
     ],
     "require": {
         "php": ">=5.2.0"
@@ -25,6 +27,6 @@
             "Liip\\SoapRecorderBundle": ""
         }
     },
-    "target-dir" : "Liip/FunctionalTestBundle",
+    "target-dir" : "Liip/LiipSoapRecorderBundle",
     "minimum-stability": "beta"
 }
