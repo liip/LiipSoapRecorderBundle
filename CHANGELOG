@@ -1,0 +1,14 @@
+      07/02/2013 07:23  0.9.1  First RC release
+         dc75d5d Init RMT
+         6f3dcaa Fixing the RMT installation via composer
+         84768d0 Fix the target-dir in composer.json
+         c367a76 Change the bundle config order
+         1c39588 typo
+         befcdba Add Travis CI status
+         8a62169 Second clean-up before outsourcing
+         f153365 Clean up before outsourcing
+         dff5b0a Remove php 5.2 from Travis CI, as composer doesn't support it
+         d4271c5 Configure Travis CI
+         eb5a331 Add a functional test suite
+         c5238d8 Move the writable check on the startRecord instead of the setFolders method
+         7de7d53 Composer setup
