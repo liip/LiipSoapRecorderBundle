@@ -24,6 +24,7 @@ class RecordableSoapClient extends \SoapClient
      * @var string This will be the unique identifier that will be used to identify a request
      */
     protected $uniqueRequestId = null;
+    protected $wsdlUrl = null;
 
 
     /**
@@ -34,6 +35,8 @@ class RecordableSoapClient extends \SoapClient
      */
     public function __construct($wsdlUrl, $options)
     {
+        $this->wsdlUrl = $wsdlUrl;
+
         // WSDL recording
         if (self::$recordCommunications == true) {
             $this->recordWsdlIfRequired($wsdlUrl, $options);
@@ -182,8 +185,23 @@ class RecordableSoapClient extends \SoapClient
     protected function populateTheUniqueRequestIdIfRequired($functionName, $arguments)
     {
         if (self::$fetchingMode !== self::FETCHING_REMOTE || self::$recordCommunications){
-            $this->uniqueRequestId = md5($functionName.serialize($arguments));
+            $this->uniqueRequestId = $this->generateUniqueRequestId($this->wsdlUrl, $functionName, $arguments);
         }
+    }
+
+    /**
+     * Generation of a unique request id, based on high level parameters (function name and arguments).
+     * This function can be overridden to use a different file naming, or to ignore some dynamic parameters
+     *  like date
+     *
+     * @param $wsdlUrl       string
+     * @param $functionName  string
+     * @param $arguments     array
+     * @return string
+     */
+    public function generateUniqueRequestId($wsdlUrl, $functionName, $arguments)
+    {
+        return md5($functionName.serialize($arguments));
     }
 
 
