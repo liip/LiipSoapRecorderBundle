@@ -8,9 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SOAPDataCollector extends DataCollector
 {
-
     protected $config;
-	
+    
     public function __construct($container)
     {
         $this->config = $container->getParameter('liip_soap_recorder_config');
@@ -18,22 +17,24 @@ class SOAPDataCollector extends DataCollector
 
     /**
      * {@inheritdoc}
-     *
      */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
-    	$requests = $this->fetchSOAPRecordsFromFolder($this->config['request_folder']);
-    	$responses = $this->fetchSOAPRecordsFromFolder($this->config['response_folder']);
+        // If the profiler is disable, just return
+        if($this->config['enable_profiler'] !== true) {
+            return;
+        }
 
-        if($this->config['enable_profiler']) {
-            $this->data = array(
-                'requests'  => $requests,
-                'responses' => $responses,
-                'count'    => count($requests),
-            );
-		
-	        $this->emptyFolders(array($this->config['request_folder'], $this->config['response_folder']));
-	    }
+        $requests = $this->fetchSOAPRecordsFromFolder($this->config['request_folder']);
+        $responses = $this->fetchSOAPRecordsFromFolder($this->config['response_folder']);
+
+        $this->data = array(
+            'requests'  => $requests,
+            'responses' => $responses,
+            'count'    => count($requests),
+        );
+
+        $this->emptyFolders(array($this->config['request_folder'], $this->config['response_folder']));
     }
 
     /**
@@ -94,7 +95,7 @@ class SOAPDataCollector extends DataCollector
                 $doc = new \DOMDocument;
                 $doc->loadXML($fileContent, LIBXML_NOERROR);
                 $doc->formatOutput = TRUE;
-     	        $fileContentFormatted = $doc->saveXML();
+                 $fileContentFormatted = $doc->saveXML();
 
                 array_push($fileList, $fileContentFormatted);
             }

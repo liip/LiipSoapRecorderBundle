@@ -20,7 +20,7 @@ class LiipSoapRecorderExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
         $container->setParameter('liip_soap_recorder_config', $config);
                 
-        if($container->getParameter('liip_soap_recorder_config')['enable_profiler']) {        
+        if($config['enable_profiler'] === true) {
             $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
             $loader->load('profiler.xml');
         }
