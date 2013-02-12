@@ -1,0 +1,61 @@
+{% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
+
+{% block menu %}
+<span class="label">
+    <span class="icon"><img src="{{ asset('bundles/webprofiler/images/profiler/soap.png') }}" alt="SOAP" /></span>
+    <strong>SOAP</strong>
+    <span class="count">
+        <span>{{ collector.count }}</span>
+    </span>
+</span>
+{% endblock %}
+
+{% block toolbar %}
+    {# the web debug toolbar content #}
+    {% set icon %}
+        <img alt="SOAP" style="border-width: 0; vertical-align: middle; margin-right: 5px;" src="data:image/png" />
+    {% endset %}
+    {% set text %}
+        SOAP |<span class="count"><span>{{ collector.count }}</span>
+        </span>
+    {% endset %}
+    {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { 'link': profiler_url } %}
+{% endblock %}
+
+{% block panel %}
+    <h2>SOAP Calls</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Request</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for request in collector.requests %}
+            <tr>
+            	<td id="request{{ loop.index }}"><a href="#response{{ loop.index }}">{{ loop.index }}</a></td>
+                <td><pre style="width:70em;overflow:auto;{% if 'Exception' in collector.responses[loop.index-1] %} color:red; {% endif %}">{{ request }}</pre></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Response</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for response in collector.responses %}
+            <tr>
+            	<td id="response{{ loop.index }}"><a href="#request{{ loop.index }}">{{ loop.index }}</a></td>
+                <td><pre style="width:70em;overflow:auto;{% if 'Exception' in response %} color:red; {% endif %}">{{ response }}</pre></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

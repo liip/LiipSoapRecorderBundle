@@ -27,12 +27,13 @@ liip_soap_recorder:
     request_folder:  /tmp/soap_request    # where to store the XML request
     response_folder: /tmp/soap_response   # where to store the XML response
     wsdl_folder:     /tml/soap_wsdl       # where to store the WSDL of the webservice
+    enable_profiler: true                 # boolean, active or not the profiler
 ```
 
 Usage
 -----
 
-To use the bundle, you can play with two config parameters:
+To use the bundle, you can play with three config parameters:
 
  * **record** can be set to
    * *true*: to start communication recording
@@ -41,6 +42,9 @@ To use the bundle, you can play with two config parameters:
    * *remote*: Always fetch response from the WebService
    * *local_only*: Always fetch response from the local recording
    * *local_first*: Try to fetch locally, and if not recorded yet, fetch to the WebService
+ * **enable_profiler** can be set to:
+   * *true*: to display SOAP records in the Symfony2 Profiler. It will delete the recorded files from the directories.
+   * *false*: to keep the files in the directories without using the Symfony2 Profiler.
 
 
 Usage outside Symfony2
