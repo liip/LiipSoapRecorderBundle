@@ -3,6 +3,11 @@
          6f3dcaa Fixing the RMT installation via composer
          84768d0 Fix the target-dir in composer.json
          c367a76 Change the bundle config order
+      12/02/2013 13:29  0.9.3  Fix of the composer install + Adding SOAP call to the symfony profiler
+         c5f3da7 Fix of the composer install
+         294e7b1 Code review over PR3
+         e369fe7 Merge pull request #3 from pierrevanhulst/symfony-profiler
+         b91bdb8 Adding the Data Collector for Symfony Profiler.
       07/02/2013 16:09  0.9.2  New PR from pierrevanhulst, including XML formating
          12a5764 Merge pull request #2 from pierrevanhulst/generate-unique-request-id
          0ea18b3 Merge pull request #1 from pierrevanhulst/format-xml
