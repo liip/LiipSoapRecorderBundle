@@ -27,6 +27,6 @@
             "Liip\\SoapRecorderBundle": ""
         }
     },
-    "target-dir" : "Liip/LiipSoapRecorderBundle",
+    "target-dir" : "Liip/SoapRecorderBundle",
     "minimum-stability": "dev"
 }
