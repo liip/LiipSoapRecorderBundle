@@ -36,7 +36,10 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('wsdl_folder')
                     ->defaultNull()
-                ->end()               
+                ->end()        
+                ->booleanNode('enable_profiler')
+                    ->defaultFalse()
+                ->end()                      
             ->end()
         ->end();
         return $treeBuilder;
