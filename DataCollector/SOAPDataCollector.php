@@ -33,8 +33,6 @@ class SOAPDataCollector extends DataCollector
             'responses' => $responses,
             'count'    => count($requests),
         );
-
-        $this->emptyFolders(array($this->config['request_folder'], $this->config['response_folder']));
     }
 
     /**
@@ -89,33 +87,27 @@ class SOAPDataCollector extends DataCollector
     {
         $fileList = array();
         foreach(scandir($folder) as $file) {
-            if(substr($file, 0, 1) != '.') {
-                $fileContent = file_get_contents($folder.'/'.$file);
 
+            // Ignore sub folders and hidden files
+            if( is_dir($file) || substr($file, 0, 1) === '.') {
+                continue;
+            }
+
+            $fileContent = file_get_contents($folder.'/'.$file);
+
+            // XML Formatting
+            if (strlen($fileContent) > 0){
                 $doc = new \DOMDocument;
                 $doc->loadXML($fileContent, LIBXML_NOERROR);
                 $doc->formatOutput = TRUE;
-                 $fileContentFormatted = $doc->saveXML();
-
-                array_push($fileList, $fileContentFormatted);
+                $fileContent = $doc->saveXML();
             }
+
+            // Saved and remove the original file
+            $fileList[] = $fileContent;
+            unlink($folder.'/'.$file);
         }
+
         return $fileList;
-    }
-
-    /**
-     * Delete files within each array of a given folder.
-     *
-     * @return null
-     */
-    protected function emptyFolders(array $folders)
-    {
-        foreach($folders as $folder) {
-            foreach(scandir($folder) as $file) {
-                if(substr($file, 0, 1) != '.') {
-                    unlink($folder.'/'.$file);
-                }
-            }
-        }
     }
 }
