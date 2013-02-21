@@ -28,12 +28,13 @@ liip_soap_recorder:
     response_folder: /tmp/soap_response   # where to store the XML response
     wsdl_folder:     /tml/soap_wsdl       # where to store the WSDL of the webservice
     enable_profiler: true                 # boolean, active or not the profiler
+    die_on_error:    false
 ```
 
 Usage
 -----
 
-To use the bundle, you can play with three config parameters:
+To use the bundle, you can play with some config parameters:
 
  * **record** can be set to
    * *true*: to start communication recording
@@ -45,6 +46,12 @@ To use the bundle, you can play with three config parameters:
  * **enable_profiler** can be set to:
    * *true*: to display SOAP records in the Symfony2 Profiler. It will delete the recorded files from the directories.
    * *false*: to keep the files in the directories without using the Symfony2 Profiler.
+ * **die_on_error** can be used to define the behaviour in case you are in local_only and a record is missing:
+  * false:  Normal behavior, will throw an exception
+  * true:   Will die() with an explicit message, this is useful on Symfony2 where sometimes the
+            generated exception is replaced by an AccessDeniedException which masked the original one
+
+
 
 
 Usage outside Symfony2

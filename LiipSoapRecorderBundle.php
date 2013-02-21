@@ -31,6 +31,9 @@ class LiipSoapRecorderBundle extends Bundle
             if ($config['record']===true) {
                 RecordableSoapClient::startRecording();
             }
+            if ($config['die_on_error']===true) {
+                RecordableSoapClient::setDieOnError(true);
+            }
         }
     }
 }
