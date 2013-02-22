@@ -81,33 +81,34 @@ class SOAPDataCollector extends DataCollector
     /**
      * Fetch the content of all files inside a folder.
      *
-     * @return array  An array of files
+     * @return array  Content of the files
      */
     protected function fetchSOAPRecordsFromFolder($folder)
     {
-        $fileList = array();
-        foreach(scandir($folder) as $file) {
+        $records = array();
+        foreach(scandir($folder) as $filename) {
 
             // Ignore sub folders and hidden files
-            if( is_dir($file) || substr($file, 0, 1) === '.') {
+            if( is_dir($filename) || substr($filename, 0, 1) === '.') {
                 continue;
             }
 
-            $fileContent = file_get_contents($folder.'/'.$file);
+            $filePath = $folder.'/'.$filename;
+            $content = file_get_contents($filePath);
 
             // XML Formatting
-            if (strlen($fileContent) > 0){
+            if (strlen($content) > 0){
                 $doc = new \DOMDocument;
-                $doc->loadXML($fileContent, LIBXML_NOERROR);
+                $doc->loadXML($content, LIBXML_NOERROR);
                 $doc->formatOutput = TRUE;
-                $fileContent = $doc->saveXML();
+                $content = $doc->saveXML();
             }
 
             // Saved and remove the original file
-            $fileList[] = $fileContent;
-            unlink($folder.'/'.$file);
+            $records[] = $content;
+            unlink($filePath);
         }
 
-        return $fileList;
+        return $records;
     }
 }
