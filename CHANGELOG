@@ -3,6 +3,10 @@
          6f3dcaa Fixing the RMT installation via composer
          84768d0 Fix the target-dir in composer.json
          c367a76 Change the bundle config order
+      22/02/2013 17:18  0.9.5  New die_on_error option
+         ca9209f Release of new version 0.9.4
+         61fc958 Merge pull request #5 from jeanmonod/die_on_error
+         f38fb23 New die_on_error parameter
       22/02/2013 17:15  0.9.4  Various fixes
          9603fd7 Merge pull request #4 from jeanmonod/change-sequence-in-recording
          9d6ed32 Merge pull request #7 from jeanmonod/data-collector-refacoring
