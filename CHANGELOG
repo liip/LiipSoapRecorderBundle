@@ -3,6 +3,14 @@
          6f3dcaa Fixing the RMT installation via composer
          84768d0 Fix the target-dir in composer.json
          c367a76 Change the bundle config order
+      22/02/2013 17:15  0.9.4  Various fixes
+         9603fd7 Merge pull request #4 from jeanmonod/change-sequence-in-recording
+         9d6ed32 Merge pull request #7 from jeanmonod/data-collector-refacoring
+         6e73990 Merge pull request #6 from jeanmonod/icons
+         28be331 Variable renaming in the data collector
+         d2c0d4a Add icons in the profiler
+         06bae1b DataCollector, ignore folder and hidden files in collecting, code simplification
+         614ecaa Record the request before the SOAP call
       12/02/2013 13:29  0.9.3  Fix of the composer install + Adding SOAP call to the symfony profiler
          c5f3da7 Fix of the composer install
          294e7b1 Code review over PR3
