@@ -33,8 +33,6 @@ class SOAPDataCollector extends DataCollector
             'responses' => $responses,
             'count'    => count($requests),
         );
-
-        $this->emptyFolders(array($this->config['request_folder'], $this->config['response_folder']));
     }
 
     /**
@@ -83,39 +81,34 @@ class SOAPDataCollector extends DataCollector
     /**
      * Fetch the content of all files inside a folder.
      *
-     * @return array  An array of files
+     * @return array  Content of the files
      */
     protected function fetchSOAPRecordsFromFolder($folder)
     {
-        $fileList = array();
-        foreach(scandir($folder) as $file) {
-            if(substr($file, 0, 1) != '.') {
-                $fileContent = file_get_contents($folder.'/'.$file);
+        $records = array();
+        foreach(scandir($folder) as $filename) {
 
+            // Ignore sub folders and hidden files
+            if( is_dir($filename) || substr($filename, 0, 1) === '.') {
+                continue;
+            }
+
+            $filePath = $folder.'/'.$filename;
+            $content = file_get_contents($filePath);
+
+            // XML Formatting
+            if (strlen($content) > 0){
                 $doc = new \DOMDocument;
-                $doc->loadXML($fileContent, LIBXML_NOERROR);
+                $doc->loadXML($content, LIBXML_NOERROR);
                 $doc->formatOutput = TRUE;
-                 $fileContentFormatted = $doc->saveXML();
-
-                array_push($fileList, $fileContentFormatted);
+                $content = $doc->saveXML();
             }
-        }
-        return $fileList;
-    }
 
-    /**
-     * Delete files within each array of a given folder.
-     *
-     * @return null
-     */
-    protected function emptyFolders(array $folders)
-    {
-        foreach($folders as $folder) {
-            foreach(scandir($folder) as $file) {
-                if(substr($file, 0, 1) != '.') {
-                    unlink($folder.'/'.$file);
-                }
-            }
+            // Saved and remove the original file
+            $records[] = $content;
+            unlink($filePath);
         }
+
+        return $records;
     }
 }
