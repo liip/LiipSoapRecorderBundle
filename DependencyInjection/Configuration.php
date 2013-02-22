@@ -39,7 +39,10 @@ class Configuration implements ConfigurationInterface
                 ->end()        
                 ->booleanNode('enable_profiler')
                     ->defaultFalse()
-                ->end()                      
+                ->end()
+                ->booleanNode('die_on_error')
+                    ->defaultFalse()
+                ->end()
             ->end()
         ->end();
         return $treeBuilder;

@@ -19,6 +19,7 @@ class RecordableSoapClient extends \SoapClient
     protected static $requestFolder = null;
     protected static $responseFolder = null;
     protected static $wsdlFolder = null;
+    protected static $dieOnError = false;
 
     /**
      * @var string This will be the unique identifier that will be used to identify a request
@@ -148,6 +149,19 @@ class RecordableSoapClient extends \SoapClient
         self::$fetchingMode = $fetchingMode;
     }
 
+    /**
+     * Select the behavior in case of local_only and missing file
+     *
+     * @param boolean $value, can be:
+     *   * false:  Normal behavior, will throw an exception
+     *   * true:   Will die() with an explicit message, this is useful on Symfony2 where sometimes the
+     *               generated exception is replace by an AccessDeniedException who masked the original one
+     */
+    public static function setDieOnError($value)
+    {
+        self::$dieOnError = $value;
+    }
+
 
     /**
      * This method is overridden to generate a unique request ID based on the function name and arguments
@@ -215,11 +229,22 @@ class RecordableSoapClient extends \SoapClient
     {
         // Handle local request fetching
         if (self::$fetchingMode === self::FETCHING_LOCAL_ONLY || self::$fetchingMode === self::FETCHING_LOCAL_FIRST) {
-            if (file_exists($this->getResponseFilePath())){
-                return file_get_contents($this->getResponseFilePath());
+            $responseFile = $this->getResponseFilePath();
+            if (file_exists($responseFile)){
+                return file_get_contents($responseFile);
             }
             elseif (self::$fetchingMode === self::FETCHING_LOCAL_ONLY) {
-                throw new \RuntimeException("Impossible to find a recorded SOAP response for the following request:\n$request");
+                if (self::$dieOnError) {
+                    $request = $this->formatXml($request, false);
+                    echo "\n\nFATAL ERROR IN ".__FILE__." line ".__LINE__.
+                         "\n\nImpossible to find a recorded SOAP response named:\n   $responseFile\n".
+                         "for the following request:\n>>>>>\n$request\n<<<<<\n"
+                    ;
+                    die(1);
+                }
+                else {
+                    throw new \RuntimeException("Impossible to find a recorded SOAP response for the following request:\n$request");
+                }
             }
         }
 
