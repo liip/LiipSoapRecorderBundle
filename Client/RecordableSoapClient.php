@@ -223,12 +223,16 @@ class RecordableSoapClient extends \SoapClient
             }
         }
 
+        // Potentially record the request
+        if (self::$recordCommunications) {
+            file_put_contents($this->getRequestFilePath(), self::formatXml($request));
+        }
+
         // Process the real SOAP call
         $response = parent::__doRequest($request, $location, $action, $version, $one_way);
 
-        // Potentially record the call
+        // Potentially record the response
         if (self::$recordCommunications) {
-            file_put_contents($this->getRequestFilePath(), self::formatXml($request));
             file_put_contents($this->getResponseFilePath(), self::formatXml($response, false));
         }
 
