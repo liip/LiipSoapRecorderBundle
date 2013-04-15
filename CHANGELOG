@@ -3,6 +3,11 @@
          6f3dcaa Fixing the RMT installation via composer
          84768d0 Fix the target-dir in composer.json
          c367a76 Change the bundle config order
+      15/04/2013 17:08  0.9.6  Allow to record the WSDL when authentication is required
+         738c728 Merge pull request #9 from liip/add-wsdl-http-authentication
+         6e7a7b5 Merge pull request #8 from liip/fix-spelling-error
+         b58431d added method to use basic auth to get the wsdl
+         333f6c6 fix spelling error in sample configuration
       22/02/2013 17:18  0.9.5  New die_on_error option
          ca9209f Release of new version 0.9.4
          61fc958 Merge pull request #5 from jeanmonod/die_on_error
