@@ -26,7 +26,7 @@ liip_soap_recorder:
     fetching_mode:   local_first          # can be remote, local_first or local_only
     request_folder:  /tmp/soap_request    # where to store the XML request
     response_folder: /tmp/soap_response   # where to store the XML response
-    wsdl_folder:     /tml/soap_wsdl       # where to store the WSDL of the webservice
+    wsdl_folder:     /tmp/soap_wsdl       # where to store the WSDL of the webservice
     enable_profiler: true                 # boolean, active or not the profiler
     die_on_error:    false
 ```
