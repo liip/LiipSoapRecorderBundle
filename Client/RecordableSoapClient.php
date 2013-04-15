@@ -50,7 +50,7 @@ class RecordableSoapClient extends \SoapClient
             }
             return parent::__construct($wsdlFile, $options);
         }
-        
+
         parent::__construct($wsdlUrl, $options);
     }
 
@@ -65,9 +65,37 @@ class RecordableSoapClient extends \SoapClient
         if ($wsdlUrl!== null) {
             $wsdlFile = $this->getWsdlFilePath($wsdlUrl);
             if (!file_exists($wsdlFile)) {
-                file_put_contents($wsdlFile, self::formatXml(file_get_contents($wsdlUrl)));
+                file_put_contents($wsdlFile, self::formatXml($this->fileGetContentsWithAuth($wsdlUrl, $options)));
             }
         }
+    }
+
+    /**
+     * If $options contains login/password, add a basic authentication
+     * header so we can handle authenticated requests
+     *
+     * @param $wsdlUrl
+     * @param $options
+     *
+     * @return string
+     */
+    protected function fileGetContentsWithAuth($wsdlUrl, $options)
+    {
+        $context = null;
+
+        if (array_key_exists('login', $options)) {
+
+            $login    = $options['login'];
+            $password = array_key_exists('password', $options) ? $options['password'] : '';
+
+            $context  = stream_context_create(array(
+                'http' => array(
+                    'header'  => 'Authorization: Basic ' . base64_encode("$login:$password")
+                )
+            ));
+        }
+
+        return file_get_contents($wsdlUrl, false, $context);
     }
 
 
