@@ -21,7 +21,7 @@ class SOAPDataCollector extends DataCollector
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
         // If the profiler is disable, just return
-        if($this->config['enable_profiler'] !== true) {
+        if ($this->config['enable_profiler'] !== true) {
             return;
         }
 
@@ -86,10 +86,10 @@ class SOAPDataCollector extends DataCollector
     protected function fetchSOAPRecordsFromFolder($folder)
     {
         $records = array();
-        foreach(scandir($folder) as $filename) {
+        foreach (scandir($folder) as $filename) {
 
             // Ignore sub folders and hidden files
-            if( is_dir($filename) || substr($filename, 0, 1) === '.') {
+            if (is_dir($filename) || substr($filename, 0, 1) === '.') {
                 continue;
             }
 
