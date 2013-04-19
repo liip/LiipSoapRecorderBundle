@@ -48,12 +48,12 @@ class RecordableSoapClient extends \SoapClient
             if (!file_exists($wsdlFile = $this->getWsdlFilePath($wsdlUrl))){
                 throw new \RuntimeException("Impossible to find a recorded WSDL $wsdlFile");
             }
+
             return parent::__construct($wsdlFile, $options);
         }
 
-        parent::__construct($wsdlUrl, $options);
+        return parent::__construct($wsdlUrl, $options);
     }
-
 
     /**
      * Record the provided WSDl if not yet exist
@@ -98,7 +98,6 @@ class RecordableSoapClient extends \SoapClient
         return file_get_contents($wsdlUrl, false, $context);
     }
 
-
     /**
      * Start the recording, RecordableSoapClient::setRecordFolders() must be called before
      */
@@ -107,10 +106,12 @@ class RecordableSoapClient extends \SoapClient
         if (self::$fetchingMode === self::FETCHING_LOCAL_ONLY) {
             throw new \Exception("It's not possible to record with FETCHING_LOCAL_ONLY mode");
         }
+
         foreach (array(self::$requestFolder, self::$responseFolder, self::$wsdlFolder) as $folder){
-            if ($folder===null){
+            if (null === $folder){
                 throw new \InvalidArgumentException("You must call RecordableSoapClient::setRecordFolders() before recording");
             }
+
             if (!is_writable($folder)) {
                 throw new \InvalidArgumentException("The folder [$folder] have not write permissions");
             }
@@ -118,7 +119,6 @@ class RecordableSoapClient extends \SoapClient
 
         self::$recordCommunications = true;
     }
-
 
     /**
      * Stop the recording
@@ -150,7 +150,6 @@ class RecordableSoapClient extends \SoapClient
         self::$wsdlFolder = realpath($wsdlFolder);
     }
 
-
     /**
      * Select the mode that will be used for webservice response fetching
      * If mode FETCHING_LOCAL_* RecordableSoapClient::setRecordFolders() must also be called
@@ -168,7 +167,7 @@ class RecordableSoapClient extends \SoapClient
         // Check folders are set
         if ($fetchingMode !== self::FETCHING_REMOTE) {
             foreach (array(self::$requestFolder, self::$responseFolder, self::$wsdlFolder) as $folder) {
-                if ($folder===null) {
+                if (null === $folder) {
                     throw new \InvalidArgumentException("You must call RecordableSoapClient::setRecordFolders() before fetching local");
                 }
             }
@@ -190,7 +189,6 @@ class RecordableSoapClient extends \SoapClient
         self::$dieOnError = $value;
     }
 
-
     /**
      * This method is overridden to generate a unique request ID based on the function name and arguments
      * The id is generated here, as it's more easy to work on those high level parameters than on the XML
@@ -205,7 +203,6 @@ class RecordableSoapClient extends \SoapClient
         return parent::__call($function_name, $arguments);
     }
 
-
     /**
      * This method is overrided to generate a unique request ID based on the function name and arguments
      *
@@ -216,7 +213,6 @@ class RecordableSoapClient extends \SoapClient
         $this->populateTheUniqueRequestIdIfRequired($function_name, $arguments);
         return parent::__soapCall($function_name, $arguments, $options, $input_headers, $output_headers);
     }
-
 
     /**
      * Fill up the request id, if we need it, by generating it with the method generateUniqueRequestId
@@ -246,7 +242,6 @@ class RecordableSoapClient extends \SoapClient
         return md5($functionName.serialize($arguments));
     }
 
-
     /**
      * Override the do request in order to record communications and/or to fetch response from the local
      *  filesystem
@@ -261,7 +256,8 @@ class RecordableSoapClient extends \SoapClient
             if (file_exists($responseFile)){
                 return file_get_contents($responseFile);
             }
-            elseif (self::$fetchingMode === self::FETCHING_LOCAL_ONLY) {
+
+            if (self::$fetchingMode === self::FETCHING_LOCAL_ONLY) {
                 if (self::$dieOnError) {
                     $request = $this->formatXml($request, false);
                     echo "\n\nFATAL ERROR IN ".__FILE__." line ".__LINE__.
@@ -270,9 +266,8 @@ class RecordableSoapClient extends \SoapClient
                     ;
                     die(1);
                 }
-                else {
-                    throw new \RuntimeException("Impossible to find a recorded SOAP response for the following request:\n$request");
-                }
+
+                throw new \RuntimeException("Impossible to find a recorded SOAP response for the following request:\n$request");
             }
         }
 
@@ -292,7 +287,6 @@ class RecordableSoapClient extends \SoapClient
         return $response;
     }
 
-
     /**
      * Generate a request file path based on the unique id
      *
@@ -302,7 +296,6 @@ class RecordableSoapClient extends \SoapClient
     {
         return $this->generateFilePath('request');
     }
-
 
     /**
      * Generate a response file path based on the unique id
@@ -314,7 +307,6 @@ class RecordableSoapClient extends \SoapClient
         return $this->generateFilePath('response');
     }
 
-
     /**
      * Generate a path where to store a given WSDL
      *
@@ -325,7 +317,6 @@ class RecordableSoapClient extends \SoapClient
         return self::$wsdlFolder.DIRECTORY_SEPARATOR.basename($wsdlUrl);
     }
 
-
     /**
      * Return a record (request or response) file path according to the uniqueRequestId
      *
@@ -335,17 +326,18 @@ class RecordableSoapClient extends \SoapClient
      */
     protected function generateFilePath($type)
     {
-        $folder = $type==='request' ? self::$requestFolder : self::$responseFolder;
+        $folder = 'request' === $type ? self::$requestFolder : self::$responseFolder;
+
         if ($folder === null) {
             throw new \RuntimeException("You must call RecordableSoapClient::setRecordFolders() before using the recorder");
         }
+
         if ($this->uniqueRequestId === null){
             throw new \RuntimeException("Unexpected error when generating the unique request ID, please contact the LiipSoapRecorderBundle maintainers");
         }
 
         return $folder.DIRECTORY_SEPARATOR.$this->uniqueRequestId.'.xml';
     }
-
 
     /**
      * Format XML input in a more readable fashion
@@ -356,24 +348,22 @@ class RecordableSoapClient extends \SoapClient
      */
     public function formatXml($xmlData, $includeXmlHeader = true)
     {
-    	if(isset($xmlData)) {
-        	$doc = new \DOMDocument;
+        if (isset($xmlData)) {
+            $doc = new \DOMDocument;
             $doc->loadXML($xmlData, LIBXML_NOERROR);
-            $doc->formatOutput = TRUE;
-        
-            if(!$includeXmlHeader) {
-                foreach($doc->childNodes as $node) {
-                    $xmlOutput = $doc->saveXML($node);
+            $doc->formatOutput = true;
+
+            $xmlOutput = '';
+            if (!$includeXmlHeader) {
+                foreach ($doc->childNodes as $node) {
+                    $xmlOutput.= $doc->saveXML($node);
                 }
-            }
-            else {
+            } else {
                 $xmlOutput = $doc->saveXML();
             }
 
             return $xmlOutput;
-    	}
-    	else {
-    	    return $xmlData;
-    	}
+        }
+        return $xmlData;
     }
 }
