@@ -20,7 +20,7 @@ class LiipSoapRecorderBundle extends Bundle
     {
         if ($this->container->hasParameter('liip_soap_recorder_config')) {
             $config = $this->container->getParameter('liip_soap_recorder_config');
-            if ($config['fetching_mode'] !== 'remote' || $config['record'] === true) {
+            if ($config['fetching_mode'] !== 'remote' || $config['record']) {
                 RecordableSoapClient::setRecordFolders(
                     $config['request_folder'],
                     $config['response_folder'],
@@ -28,10 +28,10 @@ class LiipSoapRecorderBundle extends Bundle
                 );
                 RecordableSoapClient::setFetchingMode($config['fetching_mode']);
             }
-            if ($config['record']===true) {
+            if ($config['record']) {
                 RecordableSoapClient::startRecording();
             }
-            if ($config['die_on_error']===true) {
+            if ($config['die_on_error']) {
                 RecordableSoapClient::setDieOnError(true);
             }
         }

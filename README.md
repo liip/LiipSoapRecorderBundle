@@ -58,7 +58,7 @@ Usage outside Symfony2
 ----------------------
 
 The heart of the bundle is the class Liip\SoapRecorderBundle\Client\RecordableSoapClient. This class is
- independent, so you can use it outside of the Bundle, in any PHP 5.2 project:
+ independent, so you can use it outside of the Bundle, in any PHP 5.3 project:
 
  1. Replace your base class SoapClient by the new Liip\SoapRecorderBundle\Client\RecordableSoapClient
  1. Start recording by calling:
@@ -89,7 +89,7 @@ Travis CI is also running for continuous integration tests: [![Build Status](htt
 Requirements
 ------------
 
-PHP 5.2
+PHP 5.3
 
 
 Authors

@@ -1,6 +1,5 @@
 {
     "name": "liip/soap-recorder-bundle",
-    "version": "0.9.6",
     "description": "A simple recorder for SOAP communication",
     "keywords": ["webservice", "soap", "recorder", "testing", "symfony2"],
     "type": "symfony-bundle",
@@ -8,7 +7,7 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Liip SA",
+            "name": "Liip AG",
             "homepage": "http://www.liip.ch/"
         },
         {
@@ -17,7 +16,9 @@
         }
     ],
     "require": {
-        "php": ">=5.2.0"
+        "php": ">=5.3.3",
+        "symfony/framework-bundle": ">2.0,<2.3-dev",
+        "symfony/filesystem": ">2.0,<2.3-dev"
     },
     "require-dev": {
         "liip/rmt": "0.9.*"
