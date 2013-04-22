@@ -3,6 +3,9 @@
          6f3dcaa Fixing the RMT installation via composer
          84768d0 Fix the target-dir in composer.json
          c367a76 Change the bundle config order
+      22/04/2013 08:05  0.9.7  Automatically create cache folders
+         d1e298b Merge pull request #10 from liip/cleanups
+         1199012 various cleanups, automatically create cache folders
       15/04/2013 17:08  0.9.6  Allow to record the WSDL when authentication is required
          738c728 Merge pull request #9 from liip/add-wsdl-http-authentication
          6e7a7b5 Merge pull request #8 from liip/fix-spelling-error
