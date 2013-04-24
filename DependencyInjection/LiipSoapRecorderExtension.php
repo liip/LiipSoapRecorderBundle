@@ -23,7 +23,7 @@ class LiipSoapRecorderExtension extends Extension
 
         $filesystem = new Filesystem();
         foreach (array($config['request_folder'], $config['response_folder'], $config['wsdl_folder']) as $folder){
-            if (!file_exists($folder)) {
+            if ($folder && !file_exists($folder)) {
                 $filesystem->mkdir($folder);
             }
         }
