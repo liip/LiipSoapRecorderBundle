@@ -1,8 +1,8 @@
-      07/02/2013 07:23  0.9.1  First RC release
-         dc75d5d Init RMT
-         6f3dcaa Fixing the RMT installation via composer
-         84768d0 Fix the target-dir in composer.json
-         c367a76 Change the bundle config order
+
+VERSION 0  FIRST BETA
+=====================
+
+   Version 0.9 - First Beta release
       22/04/2013 08:05  0.9.7  Automatically create cache folders
          d1e298b Merge pull request #10 from liip/cleanups
          1199012 various cleanups, automatically create cache folders
@@ -35,6 +35,11 @@
          c50cd72 Merge branch 'format-xml' of https://github.com/pierrevanhulst/LiipSoapRecorderBundle into format-xml
          0b5a7e4 Fixed formatXML method, removed lines regarding generateUniqueRequestId Method.
          78b6534 Removed "setRecordFoldersIfEmpty"
+      07/02/2013 07:23  0.9.1  First RC release
+         dc75d5d Init RMT
+         6f3dcaa Fixing the RMT installation via composer
+         84768d0 Fix the target-dir in composer.json
+         c367a76 Change the bundle config order
          3f5c908 Adding formatXML method.
          1c39588 typo
          befcdba Add Travis CI status
