@@ -17,8 +17,8 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "symfony/framework-bundle": ">2.0,<2.3-dev",
-        "symfony/filesystem": ">2.0,<2.3-dev"
+        "symfony/framework-bundle": "~2.0",
+        "symfony/filesystem": "~2.0"
     },
     "require-dev": {
         "liip/rmt": "0.9.*"
