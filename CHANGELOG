@@ -3,6 +3,10 @@ VERSION 0  FIRST BETA
 =====================
 
    Version 0.9 - First Beta release
+      24/06/2013 13:56  0.9.8  Symfony 2.3 compatibility + bug fixes
+         310864c Fix the CHANGELOG (was brocken due to RMT)
+         9a9732f 2.3 compatibility
+         42a7be6 handle case when paths are empty
       22/04/2013 08:05  0.9.7  Automatically create cache folders
          d1e298b Merge pull request #10 from liip/cleanups
          1199012 various cleanups, automatically create cache folders
