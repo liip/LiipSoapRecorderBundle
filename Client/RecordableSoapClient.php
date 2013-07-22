@@ -362,7 +362,7 @@ class RecordableSoapClient extends \SoapClient
                 $xmlOutput = $doc->saveXML();
             }
 
-            return $xmlOutput;
+            return rtrim($xmlOutput, PHP_EOL).PHP_EOL;
         }
         return $xmlData;
     }
