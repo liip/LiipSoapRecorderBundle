@@ -328,10 +328,9 @@ class RecordableSoapClient extends \SoapClient
     {
         $folder = 'request' === $type ? self::$requestFolder : self::$responseFolder;
 
-        if ($folder === null) {
+        if (null === $folder) {
             throw new \RuntimeException("You must call RecordableSoapClient::setRecordFolders() before using the recorder");
         }
-
         if ($this->uniqueRequestId === null){
             throw new \RuntimeException("Unexpected error when generating the unique request ID, please contact the LiipSoapRecorderBundle maintainers");
         }
